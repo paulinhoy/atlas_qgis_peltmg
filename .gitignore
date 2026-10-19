@@ -1,0 +1,23 @@
+# Dados (internos, ficam fora do repositório — ver README)
+data/**
+!data/
+!data/processed/
+!data/**/.gitkeep
+*.gpkg
+*.gpkg.tmp
+*.parquet
+*.csv
+
+# Conexão com o banco (host/porta/nome) e o projeto original ligado a ele
+config_banco.json
+projetos/Atlas_WS_Gerencial_format.qgz
+
+# Fichas geradas e cópias de segurança
+atlas_saida/
+backup/
+
+# Python / QGIS
+__pycache__/
+*.pyc
+*.qgs~
+*.qgz~
