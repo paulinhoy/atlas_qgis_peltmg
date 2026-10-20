@@ -19,6 +19,7 @@ scripts/
   preparar_ficha.py        regras da ficha: Parquet + CSV de obras -> data/ficha_pelt.gpkg
   montar_ficha.py          layout "Ficha PELTMG" -> projetos/Atlas_Ficha_PELTMG.qgz
   exportar_atlas.py        exporta as páginas de um atlas (PNG ou PDF)
+  montar_pdf_atlas.py      atlas da carteira recomendada: capa, sumário, setores, grupos e fichas
   baixar_dados.py          banco PostgreSQL -> data/dados_locais.gpkg (precisa de VPN)
   gerar_projeto_local.py   projeto original -> projetos/Atlas_WS_Gerencial_local.qgz
 projetos/
@@ -52,6 +53,7 @@ Os dados são internos e ficam fora do Git. Coloque-os nestes caminhos:
 | `data/processed/demanda_pax_ferro_ano.parquet` | Alocação 2055 (ferroviário de passageiros) | Aplicação web |
 | `data/processed/empreendimento_geo.parquet` | Geometria de cada empreendimento (WKT) | Aplicação web |
 | `data/cenario_recomendado_2_vw_dadosgerais_plataformaonline.csv` | Empreendimentos do cenário recomendado (`id_empreendimento`), para `--pdf-cenario-recomendado` | Plataforma online |
+| `data/capa/capa_atlas_carteira_recomendada.pdf` | Capa do atlas da carteira recomendada | Feita à parte |
 | `data/*.csv` | Obras: `id_obra`, `id_empreendimento`, `descricao_obra(_padronizada)`, `intervencao`, `tipo_infraestrutura`, `extensao_km`, `valor_obra` (separador `;`, decimal `.`) | Consulta ao banco |
 
 Do CSV de obras, vale **o mais recente** da pasta `data/` que tenha as colunas
@@ -99,6 +101,26 @@ No PDF, o `exportar_atlas.py` exporta o texto como texto (nítido e selecionáve
 rasteriza só o mapa, no dpi do export (150 dpi nesse caso). Em vetor, os polígonos do
 mapa e o texto em contorno deixam cada página com ~1 MB. Para manter o mapa em vetor,
 use `--mapa-vetorial`.
+
+### Atlas da carteira recomendada (capa, sumário e seções)
+
+```
+python scripts/montar_pdf_atlas.py               # os 1.044 empreendimentos (~20 min, ~62 MB)
+python scripts/montar_pdf_atlas.py --amostra 6   # até 6 por grupo, para testar o layout (~1 min)
+```
+
+Gera `atlas_saida/atlas_carteira_recomendada.pdf`. Roda com o Python do sistema, que
+precisa do PyMuPDF (`pip install pymupdf`), e chama o QGIS para exportar as fichas.
+O PDF tem, nesta ordem:
+
+1. a capa: primeira página de `data/capa/capa_atlas_carteira_recomendada.pdf`, fora do Git;
+2. o sumário, com a apresentação e o link para a versão web, e os setores e grupos de modelagem com links;
+3. para cada setor (`id_setor` 1 a 6), uma divisória com os seus grupos;
+4. para cada grupo de modelagem (em ordem alfabética), a lista dos empreendimentos com links, e depois as fichas em ordem de `id_empreendimento`.
+
+Cada página tem um link "↑ Sumário", e os marcadores do PDF seguem Setor › Grupo ›
+Empreendimento. Os empreendimentos, setores e grupos vêm do CSV do cenário recomendado
+(`--csv` troca o arquivo). Para remontar sem exportar as fichas de novo, use `--fichas fichas.pdf`.
 
 Para **atualizar os dados**, troque os arquivos em `data/` e rode o comando de novo.
 
