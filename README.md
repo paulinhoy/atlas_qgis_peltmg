@@ -20,6 +20,7 @@ scripts/
   montar_ficha.py          layout "Ficha PELTMG" -> projetos/Atlas_Ficha_PELTMG.qgz
   exportar_atlas.py        exporta as páginas de um atlas (PNG ou PDF)
   montar_pdf_atlas.py      atlas da carteira recomendada: capa, sumário, setores, grupos e fichas
+  montar_pdf_carteiras.py  mesmo atlas, organizado por grupo de carteiras e carteira gerencial
   baixar_dados.py          banco PostgreSQL -> data/dados_locais.gpkg (precisa de VPN)
   gerar_projeto_local.py   projeto original -> projetos/Atlas_WS_Gerencial_local.qgz
 projetos/
@@ -53,6 +54,7 @@ Os dados são internos e ficam fora do Git. Coloque-os nestes caminhos:
 | `data/processed/demanda_pax_ferro_ano.parquet` | Alocação 2055 (ferroviário de passageiros) | Aplicação web |
 | `data/processed/empreendimento_geo.parquet` | Geometria de cada empreendimento (WKT) | Aplicação web |
 | `data/cenario_recomendado_2_vw_dadosgerais_plataformaonline.csv` | Empreendimentos do cenário recomendado (`id_empreendimento`), para `--pdf-cenario-recomendado` | Plataforma online |
+| `data/siglacarteira.csv` | Carteira gerencial de cada empreendimento (`id_empreendimento;sigla_carteira`), para `montar_pdf_carteiras.py` | Fornecido à parte |
 | `data/capa/capa_atlas_carteira_recomendada.pdf` | Capa do atlas da carteira recomendada | Feita à parte |
 | `data/*.csv` | Obras: `id_obra`, `id_empreendimento`, `descricao_obra(_padronizada)`, `intervencao`, `tipo_infraestrutura`, `extensao_km`, `valor_obra` (separador `;`, decimal `.`) | Consulta ao banco |
 
@@ -121,6 +123,22 @@ O PDF tem, nesta ordem:
 Cada página tem um link "↑ Sumário", e os marcadores do PDF seguem Setor › Grupo ›
 Empreendimento. Os empreendimentos, setores e grupos vêm do CSV do cenário recomendado
 (`--csv` troca o arquivo). Para remontar sem exportar as fichas de novo, use `--fichas fichas.pdf`.
+
+### Atlas por carteira gerencial
+
+```
+python scripts/montar_pdf_carteiras.py               # os 1.044 empreendimentos (~20 min)
+python scripts/montar_pdf_carteiras.py --amostra 4   # até 4 por carteira, para testar o layout
+```
+
+Gera `atlas_saida/atlas_carteiras_gerenciais.pdf`, com a mesma estrutura visual do atlas
+anterior. Muda o agrupamento: em vez de setor e grupo de modelagem, entram os 4 grupos de
+carteiras (concessão e parcerias, prospecção de investimentos, empreendimentos contratados
+e rodovias estaduais de execução pública) e as 19 carteiras (PPP1–5, Plan1–4,
+Reg/Monit1–8, RodoPub1–2). Dentro de cada carteira, as fichas seguem a ordem de
+`id_empreendimento`. A carteira de cada empreendimento vem de `data/siglacarteira.csv`
+(`id_empreendimento;sigla_carteira`). Os nomes e as descrições das carteiras ficam em
+`CARTEIRAS`, no início do script, e uma sigla que não esteja lá interrompe o script com erro.
 
 Para **atualizar os dados**, troque os arquivos em `data/` e rode o comando de novo.
 
