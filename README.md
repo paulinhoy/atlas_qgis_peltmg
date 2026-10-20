@@ -51,6 +51,7 @@ Os dados são internos e ficam fora do Git. Coloque-os nestes caminhos:
 | `data/processed/demanda_duto_ano.parquet` | Alocação 2055 (dutoviário) | Aplicação web |
 | `data/processed/demanda_pax_ferro_ano.parquet` | Alocação 2055 (ferroviário de passageiros) | Aplicação web |
 | `data/processed/empreendimento_geo.parquet` | Geometria de cada empreendimento (WKT) | Aplicação web |
+| `data/cenario_recomendado_2_vw_dadosgerais_plataformaonline.csv` | Empreendimentos do cenário recomendado (`id_empreendimento`), para `--pdf-cenario-recomendado` | Plataforma online |
 | `data/*.csv` | Obras: `id_obra`, `id_empreendimento`, `descricao_obra(_padronizada)`, `intervencao`, `tipo_infraestrutura`, `extensao_km`, `valor_obra` (separador `;`, decimal `.`) | Consulta ao banco |
 
 Do CSV de obras, vale **o mais recente** da pasta `data/` que tenha as colunas
@@ -81,6 +82,23 @@ python gerar_tudo.py --ids 11,57,997     # só alguns empreendimentos (bom para 
 python gerar_tudo.py --dpi 150           # mais qualidade (padrão: 80 dpi)
 python gerar_tudo.py --formato pdf       # PDF em vez de PNG
 ```
+
+### PDF único do cenário recomendado
+
+```
+python gerar_tudo.py --pdf-cenario-recomendado
+python gerar_tudo.py --pdf-cenario-recomendado --so-exportar   # pula as etapas 1 e 2
+```
+
+Gera `atlas_saida/fichas_peltmg_cenario_recomendado.pdf`, um PDF só com os
+empreendimentos de `data/cenario_recomendado_2_vw_dadosgerais_plataformaonline.csv`
+(coluna `id_empreendimento`, separador `;`). Para usar outro CSV, passe `--csv caminho.csv`.
+Com 1.044 empreendimentos, o PDF tem ~60 MB e leva ~20 minutos.
+
+No PDF, o `exportar_atlas.py` exporta o texto como texto (nítido e selecionável) e
+rasteriza só o mapa, no dpi do export (150 dpi nesse caso). Em vetor, os polígonos do
+mapa e o texto em contorno deixam cada página com ~1 MB. Para manter o mapa em vetor,
+use `--mapa-vetorial`.
 
 Para **atualizar os dados**, troque os arquivos em `data/` e rode o comando de novo.
 
