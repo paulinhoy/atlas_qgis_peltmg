@@ -42,8 +42,7 @@ CARTEIRAS = [
                  "concessão administrativa"),
         ("PPP4", "Empreendimentos hidroviários para contratação ou continuidade da estruturação de "
                  "concessão ou concessão patrocinada"),
-        ("PPP5", "Empreendimentos dutoviários para contratação ou continuidade da estruturação de "
-                 "concessão ou concessão patrocinada"),
+        ("PPP5", "Empreendimentos dutoviários para início ou continuidade do investimento privado"),
     ]),
     ("Carteiras para Prospecção de Investimentos", "Prospecção de investimentos", [
         ("Plan1", "Empreendimentos rodoviários federais para alinhamento de investimentos"),
