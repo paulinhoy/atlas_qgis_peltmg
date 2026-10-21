@@ -388,7 +388,8 @@ dúvidas sobre dados, custos e cenários com o Assistente Virtual.</p>"""
         alt = 110 + len(linhas) * 34
         lista_h = sum(28 + 12 * len(quebrar(c["desc"], 9, W - 2 * M - 110)) for c in d["carteiras"])
         topo = max(40, min(H * 0.22, H - 60 - alt - 42 - lista_h))  # grupo com muitas carteiras sobe a faixa
-        pg.draw_rect(fitz.Rect(0, topo, W, topo + alt), color=None, fill=AZUL)
+        pg.draw_rect(fitz.Rect(0, 0, W, topo + alt), color=None, fill=AZUL)  # faixa desde o topo da página
+        texto(pg, M, 52, "PELTMG · Atlas de empreendimentos · Carteiras gerenciais", 9, "r", AZUL_CLARO)
         pg.draw_rect(fitz.Rect(0, topo + alt, W, topo + alt + 3), color=None, fill=AZUL_CLARO)
         texto(pg, M, topo + 46, f"Grupo de carteiras {d['id']}", 13, "r", AZUL_SUAVE)
         y = topo + 84
